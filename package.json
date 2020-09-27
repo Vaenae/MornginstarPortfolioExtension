@@ -1,0 +1,25 @@
+{
+  "name": "morningstarportfolioextension",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "dependencies": {},
+  "devDependencies": {
+    "esbuild": "0.7.7",
+    "typescript": "4.0.3"
+  },
+  "scripts": {
+    "build": "esbuild --bundle src/main.ts --outdir=dist --sourcemap --target=es2017",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vaenae/MorningstarPortfolioExtension.git"
+  },
+  "author": "Joonas Vanninen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Vaenae/MorningstarPortfolioExtension/issues"
+  },
+  "homepage": "https://github.com/Vaenae/MorningstarPortfolioExtension#readme"
+}
