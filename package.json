@@ -21,8 +21,8 @@
   "scripts": {
     "build": "node scripts/copy.js && esbuild --bundle src/main.ts --outdir=dist --sourcemap --target=es2017",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prettier": "prettier \"**/*.{js,ts,jsx,tsx,css,json}\"",
-    "format": "npm run prettier -- --write .",
+    "prettier": "prettier \"{src,scripts}/**/*.{js,ts,jsx,tsx,css,json}\"",
+    "format": "npm run prettier -- --write",
     "lint": "eslint",
     "lint:fix": "npm run lint -- --fix",
     "validate": "npm run prettier -- --list-different && npm run lint"
