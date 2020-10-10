@@ -15,5 +15,6 @@
     "declarativeContent",
     "storage"
   ],
+  "web_accessible_resources": ["*.map"],
   "manifest_version": 2
 }

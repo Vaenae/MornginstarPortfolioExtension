@@ -3,9 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
-  "dependencies": {},
+  "dependencies": {
+    "react": "16.13.1",
+    "react-dom": "16.13.1"
+  },
   "devDependencies": {
     "@types/chrome": "0.0.124",
+    "@types/react": "16.9.51",
+    "@types/react-dom": "16.9.8",
     "@typescript-eslint/eslint-plugin": "4.2.0",
     "@typescript-eslint/parser": "4.2.0",
     "esbuild": "0.7.7",
@@ -19,7 +24,7 @@
     "typescript": "4.0.3"
   },
   "scripts": {
-    "build": "node scripts/copy.js && esbuild --bundle src/main.ts --outdir=dist --sourcemap --target=es2017",
+    "build": "node scripts/copy.js && esbuild --bundle src/main.ts --outdir=dist --sourcemap --target=es2017 --define:process.env.NODE_ENV='development'",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prettier": "prettier \"{src,scripts}/**/*.{js,ts,jsx,tsx,css,json}\"",
     "format": "npm run prettier -- --write",
@@ -33,7 +38,7 @@
     }
   },
   "lint-staged": {
-    "**/*.{js,jsx,ts,tsx,css}": [
+    "{src,scripts}**/*.{js,jsx,ts,tsx,css}": [
       "npm run format",
       "npm run lint:fix",
       "git add"
