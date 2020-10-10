@@ -1,0 +1,19 @@
+{
+  "name": "Morningstar Portfolio extension",
+  "version": "1.0",
+  "description": "Add features to the Morningstar portfolio tool.",
+  "content_scripts": [
+    {
+      "matches": ["https://*/*/portfoliomanager/edittransaction.aspx*"],
+      "include_globs": ["https://www.morningstar.*/*"],
+      "js": ["main.js"]
+    }
+  ],
+  "permissions": [
+    "webNavigation",
+    "activeTab",
+    "declarativeContent",
+    "storage"
+  ],
+  "manifest_version": 2
+}
