@@ -6,7 +6,8 @@
     {
       "matches": ["https://*/*/portfoliomanager/edittransaction.aspx*"],
       "include_globs": ["https://www.morningstar.*/*"],
-      "js": ["main.js"]
+      "js": ["main.js"],
+      "css": ["main.css"]
     }
   ],
   "permissions": [
