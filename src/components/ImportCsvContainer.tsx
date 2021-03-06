@@ -1,24 +1,17 @@
 import React, { useState } from "react"
-import Papa from "papaparse"
+import { parseFile, ParseResults } from "../lib/importCsv"
 import LoadCsvModal from "./LoadCsvModal"
 
 export default function ImportCsvContainer() {
-  const [parseResult, setParseResult] = useState<
-    Papa.ParseResult<Record<string, string>> | undefined
-  >(undefined)
-  function loadFile(event: React.ChangeEvent<HTMLInputElement>) {
+  const [parseResult, setParseResult] = useState<ParseResults | undefined>(
+    undefined
+  )
+  async function loadFile(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files == null || event.target.files.length < 1) {
       return
     }
     const file = event.target.files[0]
-    Papa.parse<Record<string, string>>(file, {
-      header: true,
-      dynamicTyping: false,
-      complete: results => {
-        setParseResult(results)
-        console.log(results)
-      }
-    })
+    setParseResult(await parseFile(file))
   }
   function updatePortfolio() {
     setParseResult(undefined)
