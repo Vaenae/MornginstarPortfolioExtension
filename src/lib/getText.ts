@@ -11,7 +11,9 @@ const translations = {
   date: "Date",
   currency: "Currency",
   price: "Price",
-  comission: "Comission"
+  comission: "Comission",
+  selectColumn: "Select column",
+  selectValue: "Select value"
 }
 
 export default (key: keyof typeof translations) => translations[key]

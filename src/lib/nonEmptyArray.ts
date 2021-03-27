@@ -6,6 +6,8 @@ export function isNonEmptyArray<T>(xs: T[]): xs is NonEmptyArray<T> {
 
 export type ReadonlyNonEmptyArray<T> = readonly [T, ...T[]]
 
-export function isReadonlyNonEmptyArray<T>(xs: readonly T[]): xs is ReadonlyNonEmptyArray<T> {
+export function isReadonlyNonEmptyArray<T>(
+  xs: readonly T[]
+): xs is ReadonlyNonEmptyArray<T> {
   return xs.length > 0
 }

@@ -7,8 +7,10 @@ export interface FieldProps {
 }
 
 export default (props: FieldProps) => (
-  <div className="field is-grouped">
-    <label className="label">{props.label}</label>
-    {props.children}
+  <div>
+    <p>{props.label}</p>
+    <div className="field is-grouped is-grouped-multiline">
+      {props.children}
+    </div>
   </div>
 )

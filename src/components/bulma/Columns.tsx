@@ -3,14 +3,18 @@ import "./Columns.sass"
 
 interface ColumnsProps {
   children: ReadonlyArray<ReactNode>
+  multiline?: boolean
 }
 
-export default (props: ColumnsProps) => (
-  <div className="columns">
-    {props.children.map((childNode, index) => (
-      <div className="column" key={index}>
-        {childNode}
-      </div>
-    ))}
-  </div>
-)
+const getClassNames = (classNames: Record<string, boolean>): string =>
+  Object.keys(classNames)
+    .filter(className => classNames[className])
+    .join(" ")
+
+export default (props: ColumnsProps) => {
+  const classNames = getClassNames({
+    columns: true,
+    "is-multiline": !!props.multiline
+  })
+  return <div className={classNames}>{...props.children}</div>
+}

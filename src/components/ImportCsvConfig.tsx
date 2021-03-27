@@ -1,5 +1,4 @@
-import React, { useCallback } from "react"
-import uniq from "lodash/fp/uniq"
+import React, { useCallback, useMemo } from "react"
 import getText from "../lib/getText"
 import {
   importCsvConfigKeyGuard,
@@ -11,12 +10,12 @@ import {
 } from "../lib/importCsv"
 import { ReadonlyNonEmptyArray } from "../lib/nonEmptyArray"
 import Box from "./bulma/Box"
-import Columns from "./bulma/Columns"
 import Field from "./bulma/Field"
 import Select from "./bulma/Select"
+import Columns from "./bulma/Columns"
 
 interface ColumnAndValueInputProps {
-  key: EventType
+  id: EventType
   columnAndValue: EventTypeOptions
   inputColumnsAndValues: Record<string, ReadonlyArray<string>>
   allColumns: ReadonlyArray<string>
@@ -24,56 +23,77 @@ interface ColumnAndValueInputProps {
 }
 
 const ColumnAndValueInput = (props: ColumnAndValueInputProps) => {
-  const { key, updateConfigOption, columnAndValue } = props
+  const { id, updateConfigOption, columnAndValue } = props
   const updateColumn = useCallback(
-    (newValue: string) =>
-      updateConfigOption(key, {
+    (newValue: string | null) =>
+      updateConfigOption(id, {
         column: newValue,
         value: null
       }),
-    [key, updateConfigOption]
+    [id, updateConfigOption]
   )
   const updateValue = useCallback(
-    (newValue: string) =>
-      updateConfigOption(key, {
+    (newValue: string | null) =>
+      updateConfigOption(id, {
         column: columnAndValue.column,
         value: newValue
       }),
-    [key, columnAndValue, updateConfigOption]
+    [id, columnAndValue, updateConfigOption]
   )
   return (
-    <div>
-      <Field label={getText(props.key)}>
-        <Select options={props.allColumns} onChange={updateColumn} />
-        {columnAndValue.column !== null ? (
-          <Select
-            options={props.inputColumnsAndValues[columnAndValue.column]}
-            onChange={updateValue}
-          />
-        ) : null}
+    <div className="columnAndValueInput column is-narrow control">
+      <Field label={getText(props.id)}>
+        <Select
+          options={props.allColumns}
+          onChange={updateColumn}
+          placeholder={getText("selectColumn")}
+          selected={props.columnAndValue.column}
+        />
+        <Select
+          options={
+            columnAndValue.column === null
+              ? []
+              : props.inputColumnsAndValues[columnAndValue.column]
+          }
+          onChange={updateValue}
+          placeholder={getText("selectValue")}
+          selected={props.columnAndValue.value}
+        />
       </Field>
     </div>
   )
 }
 
 interface ColumnInputProps {
-  key: OtherField
+  id: OtherField
   column: string | null
   allColumns: ReadonlyArray<string>
   updateConfigOption: (key: OtherField, value: string | null) => void
 }
 
 const ColumnInput = (props: ColumnInputProps) => {
-  const { key, updateConfigOption } = props
+  const { id, updateConfigOption } = props
   const updateColumn = useCallback(
-    (newValue: string) => updateConfigOption(key, newValue),
-    [key, updateConfigOption]
+    (newValue: string | null) => updateConfigOption(id, newValue),
+    [id, updateConfigOption]
   )
   return (
-    <Field label={getText(props.key)}>
-      <Select options={props.allColumns} onChange={updateColumn} />
-    </Field>
+    <div className="columnInput column is-narrow">
+      <Field label={getText(props.id)}>
+        <Select
+          options={props.allColumns}
+          onChange={updateColumn}
+          placeholder={getText("selectColumn")}
+          selected={props.column}
+        />
+      </Field>
+    </div>
   )
+}
+
+function sortedUnique<T>(values: ReadonlyArray<T>) {
+  const result = Array.from(new Set(values))
+  return result.sort()
 }
 
 const getInputColumnsAndValues = (
@@ -81,7 +101,10 @@ const getInputColumnsAndValues = (
 ): Record<string, ReadonlyArray<string>> => {
   const keys = Object.keys(inputData[0])
   const result = keys.reduce(
-    (prev, key) => ({ [key]: uniq(inputData.map(row => row[key])), ...prev }),
+    (prev, key) => ({
+      [key]: sortedUnique(inputData.map(row => row[key])),
+      ...prev
+    }),
     {}
   )
   return result
@@ -94,34 +117,41 @@ interface ImportCsvConfigProps {
 }
 
 export default (props: ImportCsvConfigProps) => {
-  const { config, updateConfig } = props
-  const inputColumnsAndValues = getInputColumnsAndValues(props.inputData)
+  const { config, updateConfig, inputData } = props
+  const inputColumnsAndValues = useMemo(
+    () => getInputColumnsAndValues(inputData),
+    [inputData]
+  )
+  const allColumns = useMemo(() => Object.keys(inputColumnsAndValues), [
+    inputColumnsAndValues
+  ])
   const updateConfigOption = useCallback(
     <T extends keyof ImportCsvConfig>(key: T, value: ImportCsvConfig[T]) => {
       updateConfig({
-        [key]: value,
-        ...config
+        ...config,
+        [key]: value
       })
     },
     [config, updateConfig]
   )
-  const allColumns = Object.keys(inputColumnsAndValues)
   return (
     <Box>
-      <Columns>
+      <Columns multiline={true}>
         {importCsvConfigKeyGuard.keys.map(key =>
           eventTypeKeyGuard.typeGuard(key) ? (
             <ColumnAndValueInput
-              key={key}
-              columnAndValue={props.config[key]}
+              id={key}
+              columnAndValue={config[key]}
               allColumns={allColumns}
               inputColumnsAndValues={inputColumnsAndValues}
               updateConfigOption={updateConfigOption}
+              key={key}
             />
           ) : (
             <ColumnInput
+              id={key}
               key={key}
-              column={props.config[key]}
+              column={config[key]}
               allColumns={allColumns}
               updateConfigOption={updateConfigOption}
             />
