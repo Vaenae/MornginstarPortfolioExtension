@@ -122,9 +122,10 @@ export default (props: ImportCsvConfigProps) => {
     () => getInputColumnsAndValues(inputData),
     [inputData]
   )
-  const allColumns = useMemo(() => Object.keys(inputColumnsAndValues), [
-    inputColumnsAndValues
-  ])
+  const allColumns = useMemo(
+    () => Object.keys(inputColumnsAndValues),
+    [inputColumnsAndValues]
+  )
   const updateConfigOption = useCallback(
     <T extends keyof ImportCsvConfig>(key: T, value: ImportCsvConfig[T]) => {
       updateConfig({
